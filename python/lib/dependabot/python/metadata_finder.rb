@@ -42,6 +42,7 @@ module Dependabot
       sig { override.returns(T.nilable(String)) }
       def attestation_changes
         return unless dependency.previous_version
+        return unless dependency.version
         return if using_private_index?
 
         previous_attested = version_has_attestation?(dependency.previous_version)
@@ -184,7 +185,7 @@ module Dependabot
         return false unless response.status == 200
 
         data = JSON.parse(response.body)
-        data["attestation_bundles"].is_a?(Array) && !data["attestation_bundles"].empty?
+        data.is_a?(Hash) && data["attestation_bundles"].is_a?(Array) && !data["attestation_bundles"].empty?
       rescue JSON::ParserError, Excon::Error::Timeout
         false
       end
