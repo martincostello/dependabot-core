@@ -202,7 +202,7 @@ module Dependabot
 
       sig { params(version: String).returns(T::Hash[String, T.untyped]) }
       def pypi_version_listing(version)
-        return @pypi_version_listings[version] if @pypi_version_listings.key?(version)
+        return T.must(@pypi_version_listings[version]) if @pypi_version_listings.key?(version)
 
         url = "#{MAIN_PYPI_URL}/#{normalised_dependency_name}/#{version}/json"
         response = Dependabot::RegistryClient.get(url: url)
